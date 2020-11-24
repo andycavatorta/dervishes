@@ -15,7 +15,7 @@ class Roles():
     controller_hostname="feral"
     hosts={
         "feral":"controller",
-        "transport":"sliders",
+        "dervishes-c3-d3":"dervishes-c3-d3",
         "horsewheel":"horsewheel"
     }
 
