@@ -59,7 +59,7 @@ class Main(threading.Thread):
         print("network_status_change_handler", status, hostname)
     def exception_handler(self, exception):
         print("exception_handler",exception)
-    def sdc2160_message_handler(self, message:)
+    def sdc2160_message_handler(self, message):
         print("roboteq_message_handler:", message)
     def sdc2160_status_handler(self, message):
         print("status_handler",message)
