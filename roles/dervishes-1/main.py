@@ -35,7 +35,7 @@ class Main(threading.Thread):
             },
             self.sdc2160_message_handler,
             self.sdc2160_status_handler, 
-            self.exception_handler
+            self.exception_handler,
             self.tb
         )
 
