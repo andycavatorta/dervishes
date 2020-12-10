@@ -48,7 +48,7 @@ class Version_Control():
 class Roboteq:
     BOARDS = {
         "board-1":{
-            "mcu_id":"",
+            "mcu_id":"300:1058:2031663:1429493506:540422710",
             "serial_data_watchdog":0, #miliseconds
             "serial_echo":0, #0 = enabled, 1 is disabled
         },
@@ -85,7 +85,7 @@ class Roboteq:
     }
     MOTORS = {
         "C3":{
-            "mcu_id":"",
+            "mcu_id":"300:1058:2031663:1429493506:540422710",
             "channel":"1",
             "z_index_pin":0,
             "motor_acceleration_rate":500, # Min:0, Max:500000, Default: 10000 = 1000.0 RPM/s
@@ -97,7 +97,7 @@ class Roboteq:
             "encoder_ppr_value":4000,
         },
         "D3":{
-            "mcu_id":"",
+            "mcu_id":"300:1058:2031663:1429493506:540422710",
             "channel":"2",
             "z_index_pin":0,
             "motor_acceleration_rate":500, # Min:0, Max:500000, Default: 10000 = 1000.0 RPM/s
