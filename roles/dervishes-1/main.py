@@ -16,7 +16,7 @@ class Main(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.queue = queue.Queue()
-
+        print("A")
         self.tb = thirtybirds.Thirtybirds(
             settings, 
             app_path,
@@ -24,6 +24,7 @@ class Main(threading.Thread):
             self.network_status_change_handler,
             self.exception_handler
         )
+        print("B")
 
         self.controllers = sdc2160.Main(
             {
@@ -38,6 +39,7 @@ class Main(threading.Thread):
             self.exception_handler,
             self.tb
         )
+        print("C")
 
         # make shorter names
         self.board = self.controllers.boards["board-1"]
@@ -49,6 +51,7 @@ class Main(threading.Thread):
         self.motors["C3"].home()
         self.motors["D3"].home()
         self.start()
+        print("D")
         self.tb.subscribe_to_topic("C3")
         self.tb.subscribe_to_topic("D3")
     
