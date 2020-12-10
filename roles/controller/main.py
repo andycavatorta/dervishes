@@ -12,16 +12,20 @@ sys.path.append(os.path.split(app_path)[0])
 
 import settings
 from thirtybirds3 import thirtybirds
+from thirtybirds3.dev.hid.oxygen88 import oxygen88
 
-# Main handles network send/recv and can see all other classes directly
+
+
+
+
+
+
+
+
+
 class Main(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
-        class States:
-            WAITING_FOR_CONNECTIONS = "waiting_for_connections"
-            WAITING_FOR_HOMING = "waiting_for_homing"
-            READY = "ready" 
-        self.states =States()
         self.tb = thirtybirds.Thirtybirds(
             settings, 
             app_path,
@@ -29,81 +33,40 @@ class Main(threading.Thread):
             self.network_status_change_handler,
             self.exception_handler
         )
-        self.transport_connected = False
-        self.horsewheel_connected = False
-
-        self.pitch_slider_home = False
-        self.horsewheel_slider_home = False
-        self.horsewheel_lifter_home = False
-        self.state = self.states.WAITING_FOR_CONNECTIONS
-
         self.queue = queue.Queue()
-        self.tb.subscribe_to_topic("transport_connected")
-        self.tb.subscribe_to_topic("horsewheel_connected")
-        self.tb.subscribe_to_topic("pitch_slider_home")
-        self.tb.subscribe_to_topic("horsewheel_slider_home")
-        self.tb.subscribe_to_topic("horsewheel_lifter_home")
+        self.tb.subscribe_to_topic("")
+
+        # set up to Oxygen88 Keyboard
+        # if present
+            # load libraries
+        # else
+            # stop setup?
+
+        # set up midi file sources?
+
+        # look for all hosts defined in settings
+        # if any not present
+            # report which are missing
+            # ^ repeat
+        
+        # start GUI in BASH or HTTP
 
         self.start()
 
-    def network_message_handler(self, topic, message):
-        self.add_to_queue(topic, message)
+    def network_message_handler(self, topic, message, origin, destination):
+        self.add_to_queue(topic, message, origin, destination)
     def exception_handler(self, exception):
         print("exception_handler",exception)
     def network_status_change_handler(self, status, hostname):
         print("network_status_change_handler", status, hostname)
-        if status == True: 
-            if hostname == "transport":
-                self.transport_connected = True
-                if self.transport_connected and self.horsewheel_connected:
-                    self.state = self.states.WAITING_FOR_HOMING
-                    self.tb.publish("pitch_slider_home", False)
-                    self.tb.publish("horsewheel_slider_home", False)
-                    self.tb.publish("horsewheel_lifter_home", False)
-            if hostname == "horsewheel":
-                self.horsewheel_connected = True
-                if self.transport_connected and self.horsewheel_connected:
-                    self.state = self.states.WAITING_FOR_HOMING
-                    self.tb.publish("pitch_slider_home", False)
-                    self.tb.publish("horsewheel_slider_home", False)
-                    self.tb.publish("horsewheel_lifter_home", False)
-        else: 
-            if hostname == "transport":
-                self.transport_connected = True
-                self.state = self.states.WAITING_FOR_CONNECTIONS
-            if hostname == "horsewheel":
-                self.horsewheel_connected = True
-                self.state = self.states.WAITING_FOR_CONNECTIONS
-        print("self.state=", self.state)
 
     def add_to_queue(self, topic, message):
         self.queue.put((topic, message))
     def run(self):
-        #self.state = self.states.READY # just for testing
         while True:
             try:
-                #print("--------------",self.tb.check_connections(), self.state)
-                topic, message = self.queue.get(True)
-                print(">>>",topic, message)
-                if self.state == self.states.WAITING_FOR_HOMING:
-                    if topic == b'pitch_slider_home':
-                        self.pitch_slider_home = True
-                        if self.horsewheel_slider_home and self.pitch_slider_home and self.horsewheel_lifter_home:
-                            self.state = self.states.READY
-                    if topic == b'horsewheel_slider_home':
-                        self.horsewheel_slider_home = True
-                        if self.horsewheel_slider_home and self.pitch_slider_home and self.horsewheel_lifter_home:
-                            self.state = self.states.READY
-                    if topic == b'horsewheel_lifter_home':
-                        self.horsewheel_lifter_home = True
-                        if self.horsewheel_slider_home and self.pitch_slider_home and self.horsewheel_lifter_home:
-                            self.state = self.states.READY
-
-                if self.state == self.states.READY:
-                    if topic in ["pitch_slider_position","horsewheel_slider_position","horsewheel_speed","horsewheel_lifter_position"]:
-                        print(topic, message)
-                        self.tb.publish(topic, message)
-                print("self.state=", self.state)
+                topic, message, origin, destination = self.queue.get(True)
+                print(">>>",topic, message, origin, destination)
 
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
