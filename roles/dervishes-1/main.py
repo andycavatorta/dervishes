@@ -54,6 +54,8 @@ class Main(threading.Thread):
         print("D")
         self.tb.subscribe_to_topic("C3")
         self.tb.subscribe_to_topic("D3")
+
+        print(self.tb.hardware_management.get_system_status())
     
     def network_message_handler(self,topic, message, origin):
         print("network_message_handler",topic, message, origin)
