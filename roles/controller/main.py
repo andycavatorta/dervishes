@@ -12,16 +12,7 @@ sys.path.append(os.path.split(app_path)[0])
 
 import settings
 from thirtybirds3 import thirtybirds
-from thirtybirds3.dev.hid.oxygen88 import oxygen88
-
-
-
-
-
-
-
-
-
+#from thirtybirds3.dev.hid.oxygen88 import oxygen88
 
 class Main(threading.Thread):
     def __init__(self):
@@ -51,6 +42,7 @@ class Main(threading.Thread):
         
         # start GUI in BASH or HTTP
 
+        print(self.tb.hardware_management.get_system_status())
         self.start()
 
     def network_message_handler(self, topic, message, origin, destination):
