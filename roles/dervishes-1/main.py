@@ -16,7 +16,6 @@ class Main(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.queue = queue.Queue()
-        print("A")
         self.tb = thirtybirds.Thirtybirds(
             settings, 
             app_path,
@@ -24,8 +23,6 @@ class Main(threading.Thread):
             self.network_status_change_handler,
             self.exception_handler
         )
-        print("B")
-
         self.controllers = sdc2160.Main(
             {
                 "board-1":settings.Roboteq.BOARDS["board-1"]
@@ -39,23 +36,16 @@ class Main(threading.Thread):
             self.exception_handler,
             self.tb
         )
-        print("C")
-
         # make shorter names
         self.board = self.controllers.boards["board-1"]
         self.motors = {
             "C3":self.controllers.motors["C3"],
             "D3":self.controllers.motors["D3"],
         }
-
-        self.motors["C3"].home()
-        self.motors["D3"].home()
+        #self.motors["C3"].home()
+        #self.motors["D3"].home()
         self.start()
-        print("D")
-        self.tb.subscribe_to_topic("C3")
-        self.tb.subscribe_to_topic("D3")
-
-        print(self.tb.hardware_management.get_system_status())
+        self.tb.subscribe_to_topic(hostname)
     
     def network_message_handler(self,topic, message, origin):
         print("network_message_handler",topic, message, origin)
@@ -73,12 +63,11 @@ class Main(threading.Thread):
         self.queue.put((topic, message, origin, destination))
 
     def run(self):
-
         while True:
             try:
                 topic, message, origin, destination = self.queue.get(True)
                 print(topic, message, origin, destination)
-
+                """
                 if topic == b"C3":
                     speed = settings.pitches_to_speeds["C3"][message]
                     self.controllers.motors["C3"].set_motor_speed(speed)
@@ -86,7 +75,7 @@ class Main(threading.Thread):
                 if topic == b"D3":
                     speed = settings.pitches_to_speeds["D3"][message]
                     self.controllers.motors["D3"].set_motor_speed(speed)
-
+                """
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print(e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback)))
