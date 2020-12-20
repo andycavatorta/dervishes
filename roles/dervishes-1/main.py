@@ -45,12 +45,12 @@ class Main(threading.Thread):
         #self.motors["C3"].home()
         #self.motors["D3"].home()
         self.start()
-        print("self.tb.hostname",self.tb.hostname)
+
         self.tb.subscribe_to_topic(self.tb.hostname)
     
-    def network_message_handler(self,topic, message, origin):
-        print("network_message_handler",topic, message, origin)
-        self.add_to_queue(topic, message, origin)
+    def network_message_handler(self,topic, message, origin, destination):
+        print("network_message_handler",topic, message, origin, destination)
+        self.add_to_queue(topic, message, origin, destination)
     def network_status_change_handler(self, status, hostname):
         print("network_status_change_handler", status, hostname)
     def exception_handler(self, exception):
