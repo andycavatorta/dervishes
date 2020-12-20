@@ -134,8 +134,8 @@ class Main(threading.Thread):
                         wing = self.find_wing_for_pitch(value, control)
                         if wing > -1:
                             controller = self.wing_to_controller[wing]
+                            print(controller,[control,value])
                             self.tb.publish(controller,[control,value])
-                            
 
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
