@@ -47,9 +47,11 @@ class Main(threading.Thread):
         self.start()
 
         self.tb.subscribe_to_topic(self.tb.hostname)
+        self.tb.subscribe_to_topic("C3")
+        self.tb.subscribe_to_topic("D3")
     
     def network_message_handler(self,topic, message, origin, destination):
-        print("network_message_handler",topic, message, origin, destination)
+        #print("network_message_handler",topic, message, origin, destination)
         self.add_to_queue(topic, message, origin, destination)
     def network_status_change_handler(self, status, hostname):
         print("network_status_change_handler", status, hostname)
@@ -69,6 +71,8 @@ class Main(threading.Thread):
                 topic, message, origin, destination = self.queue.get(True)
                 print(topic, message, origin, destination)
                 """
+                match pitch to wing
+                look up speed
                 if topic == b"C3":
                     speed = settings.pitches_to_speeds["C3"][message]
                     self.controllers.motors["C3"].set_motor_speed(speed)

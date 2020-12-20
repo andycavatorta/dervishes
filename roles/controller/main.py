@@ -29,6 +29,24 @@ class Main(threading.Thread):
 
         self.hostname = self.tb.get_hostname()
         self.midi = oxygen88.Main(self.hostname, self.add_to_queue)
+        """
+        self.wing_to_controller = [
+            "dervishes-1", #c3
+            "dervishes-2", #C#3
+            "dervishes-1", #D3
+            "dervishes-3", #D#3
+            "dervishes-2", #E3
+            "dervishes-4", #F3
+            "dervishes-3", #F#3
+            "dervishes-5", #G
+            "dervishes-4", #G#3
+            "dervishes-6", #A3
+            "dervishes-5", #A#3
+            "dervishes-7", #B3
+            "dervishes-6", #C4
+            "dervishes-7", #c#4
+        ]
+        """
         self.wing_to_controller = [
             "dervishes-1", #c3
             "dervishes-2", #C#3
@@ -90,6 +108,50 @@ class Main(threading.Thread):
             [12],#64
             [13],#65
         ]
+        self.midi_to_notation = [
+            "C3",#24
+            "C#3",#25
+            "D3",#26
+            "D#3",#27
+            "E3",#28
+            "F3",#29
+            "F#3",#30
+            "G3",#31
+            "G#3",#32
+            "A3",#33
+            "A#3",#34
+            "B3",#35
+            "C4",#36
+            "C#4",#37
+            "D4",#38
+            "D#4",#39
+            "E4",#40
+            "F4",#41
+            "F#4",#42
+            "G4",#43
+            "G#4",#44
+            "A5",#45
+            "A#5",#46
+            "B5",#47
+            "C5",#48
+            "C5#",#49
+            "D5",#50
+            "D#5",#51
+            "E5",#52
+            "F5",#53
+            "F#5",#54
+            "G5",#55
+            "G#5",#56
+            "A5",#57
+            "A#5",#58
+            "B5",#59
+            "C6",#60
+            "C#6",#61
+            "D6",#62
+            "D#6",#63
+            "E6",#64
+            "F6",#65
+        ]
         # set up midi file sources?
         # look for all hosts defined in settings
         # if any not present
@@ -113,6 +175,10 @@ class Main(threading.Thread):
                         return wing_number
             return -1
         return -1
+    def convert_midi_to_notation(self, midi_note):
+        if 24 <= midi_note <= 65:
+            return self.midi_to_notation[midi_note-24]
+        return ""
 
     def network_message_handler(self, topic, message, origin, destination):
         self.add_to_queue(topic, message, origin, destination)
@@ -131,11 +197,12 @@ class Main(threading.Thread):
                 if topic == "oxygen88":
                     control,value = message
                     if control in ["note_on","note_off"]:
-                        wing = self.find_wing_for_pitch(value, control)
-                        if wing > -1:
-                            controller = self.wing_to_controller[wing]
+                        wing_number = self.find_wing_for_pitch(value, control)
+
+                        if wing_number > -1:
+                            controller = self.midi_to_notation[wing_number]
                             print(controller,[control,value])
-                            self.tb.publish(controller,[control,value])
+                            self.tb.publish(controller,[control,self.convert_midi_to_notation(value)])
 
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
