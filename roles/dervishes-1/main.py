@@ -45,7 +45,7 @@ class Main(threading.Thread):
         #self.motors["C3"].home()
         #self.motors["D3"].home()
         self.start()
-        self.tb.subscribe_to_topic(self.hostname)
+        self.tb.subscribe_to_topic(self.tb.hostname)
     
     def network_message_handler(self,topic, message, origin):
         print("network_message_handler",topic, message, origin)
