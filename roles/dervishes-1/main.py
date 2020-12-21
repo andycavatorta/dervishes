@@ -73,13 +73,13 @@ class Main(threading.Thread):
                 if topic == b"C3":
                     control, pitch = message
                     speed = settings.pitches_to_speeds["C3"][pitch]
-                    print("C3", speed)
+                    print("C3", speed,control, pitch)
                     #self.controllers.motors["C3"].set_motor_speed(speed)
 
                 if topic == b"D3":
                     control, pitch = message
                     speed = settings.pitches_to_speeds["D3"][pitch]
-                    print("D3", speed)
+                    print("D3", speed,control, pitch)
                     
                     #self.controllers.motors["D3"].set_motor_speed(speed)
             except Exception as e:
