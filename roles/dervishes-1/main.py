@@ -70,17 +70,18 @@ class Main(threading.Thread):
             try:
                 topic, message, origin, destination = self.queue.get(True)
                 print(topic, message, origin, destination)
-                """
-                match pitch to wing
-                look up speed
                 if topic == b"C3":
-                    speed = settings.pitches_to_speeds["C3"][message]
-                    self.controllers.motors["C3"].set_motor_speed(speed)
+                    control, pitch = message
+                    speed = settings.pitches_to_speeds["C3"][pitch]
+                    print("C3", speed)
+                    #self.controllers.motors["C3"].set_motor_speed(speed)
 
                 if topic == b"D3":
-                    speed = settings.pitches_to_speeds["D3"][message]
-                    self.controllers.motors["D3"].set_motor_speed(speed)
-                """
+                    control, pitch = message
+                    speed = settings.pitches_to_speeds["D3"][pitch]
+                    print("D3", speed)
+                    
+                    #self.controllers.motors["D3"].set_motor_speed(speed)
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print(e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback)))
