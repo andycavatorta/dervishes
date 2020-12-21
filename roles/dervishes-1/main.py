@@ -72,13 +72,13 @@ class Main(threading.Thread):
                 print(topic, message, origin, destination)
                 if topic == b"C3":
                     control, pitch = message
-                    speed = settings.pitches_to_speeds["C3"][pitch]
+                    speed = settings.pitches_to_speeds["C3"][pitch][1]
                     print("C3", speed,control, pitch)
                     #self.controllers.motors["C3"].set_motor_speed(speed)
 
                 if topic == b"D3":
                     control, pitch = message
-                    speed = settings.pitches_to_speeds["D3"][pitch]
+                    speed = settings.pitches_to_speeds["D3"][pitch][1]
                     print("D3", speed,control, pitch)
                     
                     #self.controllers.motors["D3"].set_motor_speed(speed)
