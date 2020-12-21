@@ -72,16 +72,20 @@ class Main(threading.Thread):
                 print(topic, message, origin, destination)
                 if topic == b"C3":
                     control, pitch = message
-                    speed = settings.pitches_to_speeds["C3"][pitch][1]
-                    print("C3", speed,control, pitch)
-                    #self.controllers.motors["C3"].set_motor_speed(speed)
+                    if control == "note_on":
+                        speed = settings.pitches_to_speeds["C3"][pitch][1]
+                    if control == "note_off":
+                        speed = 0
+                    self.controllers.motors["C3"].set_motor_speed(speed)
 
                 if topic == b"D3":
                     control, pitch = message
-                    speed = settings.pitches_to_speeds["D3"][pitch][1]
-                    print("D3", speed,control, pitch)
-                    
-                    #self.controllers.motors["D3"].set_motor_speed(speed)
+                    if control == "note_on":
+                        speed = settings.pitches_to_speeds["D3"][pitch][1]
+                    if control == "note_off":
+                        speed = 0
+                    self.controllers.motors["D3"].set_motor_speed(speed)
+
             except Exception as e:
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 print(e, repr(traceback.format_exception(exc_type, exc_value,exc_traceback)))
